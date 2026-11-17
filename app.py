@@ -1,1 +1,1 @@
-print("Welcome to Git and GitHub Lab 1")
+print("Login page created successfully")

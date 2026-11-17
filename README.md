@@ -690,3 +690,306 @@ docker run -d -p 8081:80 --name portfolio-container portfolio
 # 11. Verify container
 docker ps
 
+Lab 3 – Setting Up Docker, Clone and Dockerize a GitHub Repository
+Below is the complete practical from beginning to end, prepared for your own computer using your own GitHub repository and newly created website files.
+
+We will follow the same main workflow as your friend's college PDF, but create your own project instead of using your friend's repository.
+
+Aim: To install Docker, clone a GitHub repository, create a Dockerfile, build a Docker image and run a website inside a Docker container.
+1. Software requirements
+- Windows 10/11
+- WSL 2
+- Docker Desktop
+- Git
+- GitHub account
+- Command Prompt
+- Web browser
+2. Install WSL
+Open Command Prompt as Administrator.
+
+Execute:
+wsl --install
+
+
+Restart your computer if prompted.
+
+Verify installation:
+wsl --version
+
+
+3. Install Docker Desktop
+
+
+
+
+
+
+
+
+manula.com
+
+
+1. Visit Docker Desktop.
+2. Download Docker Desktop for Windows.
+3. Run the installer.
+4. Select the WSL 2 backend if prompted.
+5. Complete installation.
+6. Open Docker Desktop.
+7. Wait until Docker Engine is running.
+4. Verify Docker installation
+Open CMD:
+docker --version
+
+
+Expected: Docker version information.
+5. Run your first container
+docker run hello-world
+
+
+Expected output:
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+
+6. Create a new GitHub repository
+1. Open GitHub.
+2. Sign in.
+3. Click the + icon and select New repository.
+4. Repository name: My-Docker-Portfolio.
+5. Select Public.
+6. Leave README, .gitignore and License unchecked.
+7. Click Create repository.
+
+
+
+
+
+
+
+
+karttur.github.io
+
+
+Copy your repository URL. It should look like:
+https://github.com/YOUR_USERNAME/My-Docker-Portfolio.git
+
+
+7. Clone your repository
+Open CMD and execute:
+cd %USERPROFILE%\Downloads
+
+
+Clone your repository. Replace YOUR_USERNAME with your GitHub username:
+git clone https://github.com/YOUR_USERNAME/My-Docker-Portfolio.git
+
+
+Enter the folder:
+cd My-Docker-Portfolio
+
+
+Check your location:
+cd
+
+
+8. Create the website files
+We will create two files.
+
+File 1 – index.html
+notepad index.html
+
+
+Paste:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Docker Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to My Portfolio</h1>
+    <h2>Docker Practical - Lab 3</h2>
+    <p>This website is running inside a Docker container.</p>
+</body>
+</html>
+
+
+Save and close Notepad.
+
+File 2 – style.css
+notepad style.css
+
+
+Paste:
+body {
+    font-family: Arial;
+    text-align: center;
+    background-color: lightblue;
+    padding: 100px;
+}
+
+h1 {
+    color: darkblue;
+}
+
+
+Save and close Notepad.
+
+Check the files:
+dir
+
+
+You should see index.html and style.css.
+9. Upload files to GitHub
+Execute these commands:
+git add .
+
+
+git commit -m "Add portfolio website"
+
+
+git push
+
+
+Your website source code is now uploaded to GitHub.
+10. Create Dockerfile
+Execute:
+notepad Dockerfile
+
+
+Paste the following code:
+FROM nginx:alpine
+
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+
+Save the file with the exact name Dockerfile, without .txt.
+
+Explanation:
+Command	Purpose
+FROM nginx:alpine	Uses Nginx as the base image
+COPY . /usr/share/nginx/html	Copies website files into the Nginx directory
+EXPOSE 80	Documents the web server port
+
+11. Build Docker image
+Execute:
+docker build -t portfolio .
+
+
+Wait until the image is built successfully.
+12. Verify Docker image
+docker images
+
+
+Expected: An image named portfolio should appear.
+13. Run Docker container
+Execute:
+docker run -d -p 8081:80 --name portfolio-container portfolio
+
+
+Explanation:
+- -d – Runs container in the background.
+- -p 8081:80 – Maps host port 8081 to container port 80.
+- --name – Assigns a container name.
+- portfolio – Specifies the image.
+14. Verify running container
+Execute:
+docker ps
+
+
+Your portfolio-container should show status Up.
+15. Open Dockerized website
+Open Chrome and enter:
+Open My Docker Portfolio
+
+
+
+
+
+
+
+learn.ibots-bonn.de
+
+
+16. Result
+Successfully installed and configured Docker, created a new GitHub repository, cloned the repository, created website files and a Dockerfile, built a Docker image, and deployed the portfolio website inside a Docker container.
+17. Conclusion
+Docker was used to containerize a portfolio website using the Nginx web server. The website was successfully accessed through the browser using port mapping.
+
+Screenshots to attach to your practical file
+Take your own screenshots while performing the practical.
+1. WSL installation and verification.
+2. Docker Desktop running.
+3. Docker version verification.
+4. Successful hello-world execution.
+5. Creation of GitHub repository.
+6. Cloning GitHub repository.
+7. index.html and style.css code.
+8. Dockerfile code.
+9. Docker image build output.
+10. Docker images command output.
+11. Docker container running using docker ps.
+12. Portfolio website opened at localhost:8081.
+Quick revision – All important commands
+Keep this command sheet for your exam:
+:: Install WSL
+wsl --install
+
+:: Verify WSL
+wsl --version
+
+:: Check Docker
+docker --version
+
+:: Run first container
+docker run hello-world
+
+:: Navigate to Downloads
+cd %USERPROFILE%\Downloads
+
+:: Clone GitHub repository
+git clone https://github.com/YOUR_USERNAME/My-Docker-Portfolio.git
+
+:: Enter project folder
+cd My-Docker-Portfolio
+
+:: Check files
+dir
+
+:: Upload files to GitHub
+git add .
+git commit -m "Add portfolio website"
+git push
+
+:: Build Docker image
+docker build -t portfolio .
+
+:: Verify image
+docker images
+
+:: Run Docker container
+docker run -d -p 8081:80 --name portfolio-container portfolio
+
+:: Verify container
+docker ps
+
+
+Important viva questions
+Question	Answer
+1. What is Docker?	A platform for building and running applications in containers.
+2. What is a Docker image?	A template used to create containers.
+3. What is a Docker container?	An isolated environment where an application runs.
+4. What is a Dockerfile?	A file containing instructions to build a Docker image.
+5. What is Docker Hub?	A platform to store and share Docker images.
+6. What is Nginx?	A web server used to serve web applications.
+7. What is WSL?	Windows Subsystem for Linux.
+8. What does docker build do?	Builds a Docker image.
+9. What does docker run do?	Creates and starts a container.
+10. What does -p 8081:80 mean?	Maps host port 8081 to container port 80.
+11. What does -d mean?	Runs a container in the background.
+12. What does docker ps do?	Displays running containers.
+
+Important practical note: If docker run says the container name is already in use, execute:
+docker rm -f portfolio-container
+

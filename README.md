@@ -1807,4 +1807,184 @@ Open Google Chrome.
 
 Enter:
 
+-----------------------------------------------------------------------------------------------
 
+final 4 
+Lab 4: Continuous Integration and Deployment using Git, Jenkins and Docker
+
+Aim: To create a CI/CD pipeline using Git, Jenkins and Docker to build and deploy a website automatically.
+
+Tools required: Git Bash, GitHub, Jenkins, Docker Desktop and Google Chrome.
+
+This practical is different from Practical 3. Here, Jenkins will automatically build the Docker image, run the container and verify it.
+Step 1 – Clone the GitHub repository
+Open Git Bash.
+
+Go to Downloads:
+cd ~/Downloads
+
+
+Clone the repository used in your friend's journal:
+git clone https://github.com/jasleenkaur/Portfolio-MScDevops.git
+
+
+Enter the project folder:
+cd Portfolio-MScDevops
+
+
+Check the files:
+ls
+
+
+You should see the project files, such as README.md, index.html, script.js and style.css if those files are present in the repository.
+
+If the repository URL is unavailable or returns an error, send me a screenshot rather than using a different repository.
+
+Screenshot 1: Capture the successful Git clone and project files.
+Step 2 – Create a Dockerfile
+In Git Bash, while inside Portfolio-MScDevops, execute:
+touch Dockerfile
+
+
+Open it:
+notepad Dockerfile
+
+
+Paste the following code:
+FROM nginx:alpine
+
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+
+Save the file and close Notepad.
+
+Verify:
+cat Dockerfile
+
+
+Explanation:
+- FROM nginx:alpine – Uses the Nginx web server.
+- COPY . /usr/share/nginx/html – Copies website files into the container.
+- EXPOSE 80 – Specifies the web server port.
+Screenshot 2: Capture the Dockerfile code.
+Step 3 – Add Docker to Windows PATH and restart Jenkins
+This is important because Jenkins must be able to recognize Docker commands.
+
+A. Add Docker to PATH
+1. Press Win + R.
+2. Type:
+sysdm.cpl
+
+
+3. Click Advanced.
+4. Click Environment Variables.
+5. Under System variables, select Path.
+6. Click Edit → New.
+Add the Docker executable folder.
+
+Your friend's PDF shows:
+C:\Users\Admin\AppData\Local\Programs\DockerDesktop\resources\bin
+
+
+Replace Admin with your Windows username if Docker is installed in that location. Check the actual location first; don't add a path that doesn't exist.
+
+7. Click OK on all windows.
+
+B. Restart Jenkins
+1. Press Win + R.
+2. Type:
+services.msc
+
+
+3. Find Jenkins.
+4. Right-click Jenkins.
+5. Click Restart.
+Screenshot 3: Capture Docker PATH configuration and Jenkins service restarted.
+Step 4 – Create a new Jenkins Pipeline
+1. Open Chrome.
+2. Open Jenkins:
+http://localhost:8080
+
+
+3. Log in to Jenkins.
+4. Open Blue Ocean (if installed).
+5. Select Create a new Pipeline.
+6. Select GitHub.
+7. Connect your GitHub account if prompted.
+8. Select the Portfolio-MScDevops repository.
+9. Create the pipeline.
+If Blue Ocean is not installed, tell me before proceeding; we can check your Jenkins setup.
+
+Screenshot 4: Capture the Jenkins pipeline configuration and connected GitHub repository.
+Step 5 – Add Build stage
+In the Jenkins Pipeline editor:
+1. Add a stage named Build.
+2. Select Windows Batch Script.
+3. Enter these commands:
+where docker
+docker --version
+docker build -t portfolio .
+
+
+The commands:
+- where docker checks the Docker executable location.
+- docker --version verifies Docker.
+- docker build -t portfolio . builds the Docker image.
+Screenshot 5: Capture the Build stage and commands.
+Step 6 – Add Run Docker Container stage
+1. Click the + after the Build stage.
+2. Select Windows Batch Script.
+3. Name the stage:
+Run Docker Container
+
+
+4. Enter the command from your PDF:
+docker rm -f portfolio-container >nul 2>&1 & docker run -d -p 8081:80 --name portfolio-container portfolio
+
+
+This removes an existing container with the same name (if present) and starts a new one.
+
+Screenshot 6: Capture the Run Docker Container stage.
+Step 7 – Add Verify Docker Container stage
+1. Click the + after the Run Docker Container stage.
+2. Select Windows Batch Script.
+3. Name the stage:
+Verify Docker Container
+
+
+4. Enter:
+docker ps
+
+
+This verifies whether the Docker container is running.
+
+Screenshot 7: Capture the Verify Docker Container stage.
+Step 8 – Run the Jenkins Pipeline
+1. Save the pipeline.
+2. Click Run.
+3. Wait for all stages to complete.
+4. Check that Build, Run Docker Container and Verify Docker Container are successful.
+
+
+
+
+
+
+
+
+ratheeshcloud.com
+
+
+Screenshot 8: Capture the successful Jenkins pipeline execution.
+Step 9 – Verify in terminal and open the website
+Open Git Bash or CMD and execute:
+docker ps
+
+
+Check that portfolio-container is running.
+
+Now open Chrome:
+Website URL
+http://localhost:8081/

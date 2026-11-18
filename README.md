@@ -3039,4 +3039,217 @@ Kubernetes is a container-orchestration platform used to deploy and manage conta
 ---
 
 # END OF PRACTICAL 5 & 6
+---------------------------------------------------------
+--------------------------------------------------
+
+
+# PRACTICAL 9
+## Lab #9: Setting up Prometheus and Visualizing Metrics in Grafana (Windows)
+
+### Aim
+
+To deploy Prometheus and Grafana, configure Prometheus as a metrics data source, and visualize system performance metrics such as CPU utilization through Grafana dashboards.
+
+### Step 1: Download Prometheus
+
+1. Open the official Prometheus download page:
+   https://prometheus.io/download/
+2. Download the Windows AMD64 version.
+3. Save the downloaded ZIP file in the Admin folder.
+
+### Step 2: Extract Prometheus
+
+1. Extract the downloaded ZIP file.
+2. Move the extracted Prometheus folder to the C drive.
+3. Open the extracted folder.
+4. Locate the following files:
+   - prometheus.exe
+   - prometheus.yml
+   - promtool.exe
+
+### Step 3: Open Prometheus Configuration File
+
+1. Open the Prometheus folder.
+2. Right-click `prometheus.yml`.
+3. Open it using Visual Studio Code.
+
+### Step 4: Configure Prometheus
+
+Replace the configuration with the following:
+
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "windows"
+    static_configs:
+      - targets: ["localhost:9182"]
+```
+
+Save the file.
+
+### Step 5: Start Prometheus
+
+1. Open Command Prompt.
+2. Navigate to the Prometheus folder.
+
+Example:
+
+```cmd
+cd C:\Users\Admin\prometheus
+```
+
+3. Execute:
+
+```cmd
+prometheus.exe --config.file=prometheus.yml
+```
+
+Keep this Command Prompt window running.
+
+### Step 6: Verify Prometheus
+
+Open your browser and visit:
+
+http://localhost:9090
+
+The Prometheus web interface should appear.
+
+### Step 7: Check Prometheus Metrics
+
+1. Open the Prometheus web interface.
+2. Locate the query box.
+3. Enter:
+
+```text
+up
+```
+
+4. Click Execute.
+
+Expected result: Prometheus displays the status of the configured targets.
+
+### Step 8: Download Windows Exporter
+
+1. Open the official GitHub releases page:
+
+https://github.com/prometheus-community/windows_exporter/releases
+
+2. Download the Windows AMD64 MSI installer.
+3. Install the downloaded MSI file.
+4. Complete the installation.
+
+Windows Exporter collects system-level metrics such as CPU, memory and disk utilization.
+
+### Step 9: Verify Windows Exporter Metrics
+
+Open your browser and visit:
+
+http://localhost:9182/metrics
+
+You should see raw system metrics collected by Windows Exporter.
+
+### Step 10: Download Grafana
+
+1. Open the official Grafana download page:
+
+https://grafana.com/grafana/download?platform=windows
+
+2. Download Grafana for Windows.
+3. Install Grafana using the installer.
+4. Start the Grafana service.
+
+### Step 11: Open Grafana
+
+Open your browser and visit:
+
+http://localhost:3000
+
+Log in using the default credentials:
+
+Username: admin
+
+Password: admin
+
+### Step 12: Change Grafana Password
+
+1. After logging in, Grafana will prompt you to change the default password.
+2. Enter a new password.
+3. Save the password and continue.
+
+### Step 13: Open Grafana Dashboard
+
+After successful login, the Grafana home page will appear.
+
+### Step 14: Add Prometheus Data Source
+
+1. On the left side, click Connections.
+2. Select Data Sources.
+3. Click Add data source.
+4. Select Prometheus.
+
+### Step 15: Configure Prometheus Data Source
+
+Enter the following URL:
+
+```text
+http://localhost:9090
+```
+
+Click Save & Test.
+
+Expected result: The Prometheus data source connection should be successful.
+
+### Step 16: Create a Dashboard
+
+1. Click Dashboards.
+2. Select New Dashboard.
+3. Click Add Visualization.
+
+### Step 17: Select Prometheus Data Source
+
+Select Prometheus as the data source for the new visualization.
+
+### Step 18: Enter CPU Metrics Query
+
+In the query editor, enter:
+
+```promql
+100 * (1 - avg by (instance) (
+  rate(windows_cpu_time_total{
+    mode="idle"
+  }[5m])
+))
+```
+
+Click Run queries.
+
+This query calculates CPU utilization percentage based on Windows Exporter CPU metrics.
+
+### Step 19: View CPU Utilization Graph
+
+Grafana displays the CPU utilization graph based on the collected Prometheus metrics.
+
+### Step 20: Save Dashboard
+
+1. Click Save Dashboard.
+2. Enter a dashboard name.
+3. Save the dashboard.
+
+The CPU utilization visualization will now be available in Grafana.
+
+### Conclusion
+
+This practical demonstrated the setup and integration of Prometheus and Grafana on a Windows system. We configured Prometheus to collect system metrics using Windows Exporter and connected it to Grafana as a data source. We then created a dashboard to visualize CPU utilization through graphical representations.
+
+Prometheus provides efficient metrics collection and monitoring, while Grafana offers powerful visualization capabilities. Together, they help administrators monitor system performance, identify resource utilization issues, and maintain infrastructure health in a DevOps environment.
+
+---
+
+# END OF PRACTICAL 9
 

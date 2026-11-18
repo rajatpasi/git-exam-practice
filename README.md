@@ -993,3 +993,644 @@ Question	Answer
 Important practical note: If docker run says the container name is already in use, execute:
 docker rm -f portfolio-container
 
+----------------------------------------------------------------------------------------------
+# PRACTICAL 2: COMPREHENSIVE DEVOPS PIPELINE WITH JENKINS & BLUE OCEAN
+
+## Aim
+
+To install and configure Jenkins on a local Windows system and create an automated CI/CD pipeline integrated with Git and GitHub using Blue Ocean.
+
+## Software Requirements
+
+1. Windows 10/11
+2. Java JDK (version supported by the installed Jenkins release)
+3. Jenkins
+4. Git and GitHub
+5. Python
+6. Blue Ocean plugin
+7. Web browser
+
+## Architecture
+
+Developer → Git Repository → Jenkins → Build → Test → Deploy → Archive Artifacts
+
+---
+
+## Step 1: Install and verify Java
+
+Jenkins requires Java to run.
+
+Open PowerShell and execute:
+
+```powershell
+java -version
+```
+
+Expected: Java version details should appear.
+
+If Java is not installed, install a JDK version supported by your Jenkins release and verify again.
+
+## Step 2: Install Jenkins
+
+1. Download the Jenkins Windows installer.
+2. Run the installer.
+3. Follow the installation wizard.
+4. Keep the default port as 8080, unless it is already occupied.
+5. Complete the installation.
+6. Open your browser.
+
+Enter:
+
+```text
+http://localhost:8080
+```
+
+The Jenkins Unlock screen should appear.
+
+## Step 3: Unlock Jenkins
+
+Jenkins asks for an initial administrator password.
+
+Open PowerShell and execute:
+
+```powershell
+Get-Content "C:\ProgramData\Jenkins\.jenkins\secrets\initialAdminPassword"
+```
+
+If Jenkins uses its default data directory, the password will be displayed.
+
+1. Copy the password.
+2. Paste it into the Administrator password field.
+3. Click Continue.
+
+## Step 4: Create the first administrator user
+
+On the Create First Admin User page, enter:
+
+- Username: admin
+- Password: Create your own password
+- Confirm password: Enter the same password
+- Full name: Your name
+- Email address: Your email address
+
+Click Save and Continue.
+
+On the next screen, complete the Jenkins URL configuration and click Save and Finish.
+
+Click Start using Jenkins.
+
+Expected result: Jenkins dashboard should open successfully.
+
+## Step 5: Install Blue Ocean plugin
+
+1. Open Jenkins Dashboard.
+2. Click Manage Jenkins.
+3. Open Plugins.
+4. Select Available plugins.
+5. Search for Blue Ocean.
+6. Select the Blue Ocean plugin and its required dependencies.
+7. Click Install.
+8. Wait until the installation completes.
+
+If Blue Ocean is not available in your Jenkins installation, use the standard Pipeline interface as an alternative.
+
+## Step 6: Create a project folder
+
+Open Git Bash and execute:
+
+```bash
+cd ~/Desktop
+mkdir DevOps-Project
+cd DevOps-Project
+```
+
+Verify the current directory:
+
+```bash
+pwd
+```
+
+## Step 7: Create a Python application
+
+Create the Python application:
+
+```bash
+notepad app.py
+```
+
+Paste the following code:
+
+```python
+print("Hello! Welcome to DevOps CI/CD Pipeline")
+print("Application executed successfully")
+```
+
+Save the file and close Notepad.
+
+Verify the file:
+
+```bash
+cat app.py
+```
+
+## Step 8: Initialize Git repository
+
+Execute the following commands:
+
+```bash
+git init -b main
+git add .
+git status
+git commit -m "Initial commit"
+```
+
+If Git asks for your identity, configure it:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Repeat the commit if necessary.
+
+## Step 9: Create a GitHub repository
+
+1. Open https://github.com
+2. Log in to your account.
+3. Click the + icon.
+4. Select New repository.
+5. Enter repository name: DevOps-Project.
+6. Select Public.
+7. Click Create repository.
+
+Copy the repository URL.
+
+## Step 10: Connect the local repository to GitHub
+
+Execute:
+
+```bash
+git remote add origin https://github.com/USERNAME/DevOps-Project.git
+```
+
+Replace USERNAME with your GitHub username.
+
+Push the project:
+
+```bash
+git push -u origin main
+```
+
+Refresh GitHub and verify that app.py is visible.
+
+## Step 11: Open Blue Ocean and create a pipeline
+
+1. Open Jenkins Dashboard.
+2. Click Open Blue Ocean.
+3. Click Create a new Pipeline.
+4. Select where your source code is stored.
+5. Select GitHub if using your GitHub repository.
+6. Authorize Jenkins to access GitHub if requested.
+7. Select the DevOps-Project repository.
+8. Select the main branch.
+
+Blue Ocean will check the repository for an existing Jenkinsfile.
+
+If it does not find one, select Create Pipeline.
+
+## Step 12: Create the Build stage
+
+The pipeline editor will open.
+
+1. Select the Build stage.
+2. Click Add step.
+3. Select Windows Batch Script.
+4. Enter the following script:
+
+```bat
+echo "Compiling application"
+python --version
+python app.py
+```
+
+5. Save the stage.
+6. Enter description: Build Step Created.
+7. Select the main branch.
+8. Click Save & Run.
+
+The Build stage will be created.
+
+## Step 13: Create the Test stage
+
+1. Open the pipeline editor.
+2. Click Add stage after Build.
+3. Name the stage Test.
+4. Click Add step.
+5. Select Windows Batch Script.
+6. Enter:
+
+```bat
+echo "Running Tests"
+python -c "assert 2 + 3 == 5"
+```
+
+7. Save the stage.
+8. Enter description: Test Step Created.
+9. Select main.
+10. Click Save & Run.
+
+Expected result: Test stage should execute successfully.
+
+## Step 14: Create the Deploy stage
+
+1. Click Add stage after Test.
+2. Enter stage name: Deploy.
+3. Click Add step.
+4. Select Windows Batch Script.
+5. Enter:
+
+```bat
+echo "Deploying application"
+echo "Deployment completed successfully"
+```
+
+6. Save the stage.
+7. Enter description: Deploy Step Created.
+8. Select main.
+9. Click Save & Run.
+
+Expected result: Deploy stage should execute successfully.
+
+## Step 15: Create Build Artifact
+
+Add an artifact creation step to the Build stage.
+
+Select Windows Batch Script and enter:
+
+```bat
+echo Build Version 1.0 > build-info.txt
+```
+
+This creates a file named build-info.txt.
+
+Add an Archive the artifacts step to the pipeline and configure:
+
+```text
+Artifacts: build-info.txt
+```
+
+Enable fingerprinting if the option is available.
+
+Save and run the pipeline.
+
+Expected result: The build artifact should be archived successfully.
+
+## Step 16: Verify the complete pipeline
+
+Open Blue Ocean and observe the pipeline.
+
+The stages should appear in the following order:
+
+1. Start
+2. Build
+3. Test
+4. Deploy
+5. End
+
+Successful stages should show green status indicators.
+
+Open the latest pipeline execution and check the logs of each stage.
+
+## Step 17: Perform error testing
+
+To understand pipeline failure handling, modify the Python application.
+
+Open Git Bash:
+
+```bash
+notepad app.py
+```
+
+Replace the application code with:
+
+```python
+print("This is a buggy version of the app");
+```
+
+For a deliberate test failure, change the Test stage script to:
+
+```bat
+echo "Running automated tests"
+python -c "assert 2 + 3 == 6"
+```
+
+Save the changes and execute the pipeline again.
+
+Expected result:
+
+- Build stage may execute successfully.
+- Test stage will fail.
+- The pipeline will show a failed status.
+- Deploy stage will not execute if it depends on the failed Test stage.
+
+This demonstrates how Jenkins identifies errors during pipeline execution.
+
+## Step 18: Fix the error
+
+Open the Blue Ocean pipeline editor.
+
+Replace the Test stage script with:
+
+```bat
+echo "Running automated tests"
+python -c "assert 2 + 3 == 5"
+```
+
+Ensure the application code is also correct:
+
+```python
+print("Hello! Welcome to DevOps CI/CD Pipeline")
+print("Application executed successfully")
+```
+
+Save and run the pipeline again.
+
+Expected result: All pipeline stages should execute successfully.
+
+## Step 19: Final verification
+
+Verify the following:
+
+- Jenkins dashboard is accessible.
+- Blue Ocean plugin is installed.
+- GitHub repository is connected.
+- Build stage is successful.
+- Test stage is successful.
+- Deploy stage is successful.
+- Build artifact is archived.
+- Final pipeline status is successful.
+
+## Result
+
+Successfully installed and configured Jenkins, integrated GitHub with Jenkins using Blue Ocean, created Build, Test and Deploy stages, archived build artifacts, and tested both successful and failed pipeline executions.
+
+## Conclusion
+
+This practical demonstrated the implementation of a CI/CD pipeline using Jenkins and Blue Ocean. The integration of GitHub with Jenkins enabled source code management and automated pipeline execution. Different stages such as Build, Test, Deploy and Artifact Archiving were configured and executed successfully. Error testing was also performed to understand pipeline failure handling and troubleshooting.
+
+-------------------------------------------------------------------------------------------
+PRACTICAL
+3: DOCKER BASICS
+============================================================ AIM: To
+install Docker Desktop, verify it, run a container, create a Dockerfile
+and build/run a custom image.
+
+REQUIREMENTS: Windows, WSL 2, Docker Desktop, Command Prompt or
+PowerShell.
+
+1.  Check WSL: wsl –version If not installed, open Administrator
+    PowerShell and run: wsl –install Restart if requested.
+
+2.  Install Docker Desktop: Download from
+    https://www.docker.com/products/docker-desktop/ Install with WSL 2
+    backend where available, restart if requested, open Docker Desktop
+    and wait for Docker Engine to run.
+
+3.  Verify: docker –version docker info
+
+4.  Run the test container: docker run hello-world Expected: Docker
+    displays a message confirming that the installation works.
+
+5.  Create a folder: mkdir docker-test cd docker-test
+
+6.  Create Dockerfile: notepad Dockerfile Enter: FROM ubuntu CMD
+    [“echo”, “Hello BCA Students”] Save. The filename must be exactly
+    Dockerfile, not Dockerfile.txt. If saved incorrectly: ren
+    Dockerfile.txt Dockerfile
+
+7.  Build image: docker build -t bca-image .
+
+8.  Run image: docker run bca-image Expected: Hello BCA Students
+
+9.  Verify: docker images docker ps docker ps -a
+
+RESULT: Docker was verified; hello-world ran; a Dockerfile was created
+and a custom image was built and executed.
+
+CONCLUSION: Docker images package applications and dependencies;
+containers run those images in isolated environments.
+
+SCREENSHOTS: WSL version; Docker Desktop; docker version; hello-world;
+Dockerfile; build output; run output; Docker Desktop container list.
+
+============================================================ PRACTICAL
+4: DOCKER IMAGE FROM REMOTE REPOSITORY (DOCKER COMPOSE)
+============================================================ AIM: The
+journal describes Docker Compose for multi-container applications. The
+visible screenshots specifically show a Node.js frontend Dockerfile
+cloning a remote GitHub repository, installing dependencies, exposing
+port 3000 and starting the application. A complete Compose YAML or
+complete multi-service configuration is not visible in the source
+screenshots.
+
+1.  Create folder in Command Prompt: mkdir new-docker cd new-docker
+
+2.  Create Dockerfile: notepad Dockerfile
+
+Enter the following, replacing the URL with the actual frontend
+repository you are authorized to use:
+
+Use Node.js image
+
+FROM node:18 # Set working directory WORKDIR /app # Install Git RUN
+apt-get update && apt-get install -y git # Clone frontend project RUN
+git clone https://github.com/USERNAME/REPOSITORY.git . # Install
+dependencies RUN npm install # Expose React default port EXPOSE 3000 #
+Start React application CMD [“npm”, “start”]
+
+Save. Ensure the filename is Dockerfile, not Dockerfile.txt. If needed:
+ren Dockerfile.txt Dockerfile
+
+3.  Verify: dir
+
+4.  Build: docker build -t react-frontend .
+
+5.  Run: docker run -p 3000:3000 react-frontend
+
+6.  Open browser: http://localhost:3000 The app should load if its
+    package configuration starts the app on port 3000.
+
+7.  Verify container in another terminal: docker ps Stop with Ctrl+C in
+    the running terminal, or use docker stop CONTAINER_ID.
+
+NOTE: Docker Compose uses a compose.yaml or docker-compose.yml file to
+define related services. The provided screenshots do not show enough
+detail to reproduce a particular frontend/backend/database Compose file.
+Do not invent service names, ports, passwords or database settings.
+
+RESULT: A frontend project was cloned from a remote Git repository,
+packaged into a Docker image and run through port 3000.
+
+CONCLUSION: Docker images make applications portable. Docker Compose can
+manage multiple related containers when a valid service configuration is
+supplied.
+
+SCREENSHOTS: folder; Dockerfile; filename; build output; container run;
+browser at localhost:3000; docker ps.
+
+============================================================ PRACTICAL
+5: INTRODUCTION TO ANSIBLE
+============================================================ AIM: To
+install Ansible on Windows using WSL and create playbooks to automate
+basic tasks.
+
+REQUIREMENTS: Windows, WSL, Ubuntu, Ansible.
+
+1.  Install WSL from Administrator PowerShell: wsl –install Restart if
+    requested.
+
+2.  Launch Ubuntu. Create your own Linux username and password. Do not
+    use credentials from another student’s journal.
+
+3.  Update Ubuntu: sudo apt update
+
+4.  Install Ansible: sudo apt install ansible -y
+
+5.  Verify: ansible –version
+
+6.  Create folder: mkdir ~/ansible_lab cd ~/ansible_lab
+
+7.  Create playbook: nano basic_playbook.yml
+
+Enter this YAML, replacing YOUR_LINUX_USERNAME with your actual Ubuntu
+username. Keep the indentation:
+
+------------------------------------------------------------------------
+
+-   name: Basic Ansible Automation hosts: localhost connection: local
+    tasks:
+    -   name: Create a text file file: path:
+        /home/YOUR_LINUX_USERNAME/ansible_file.txt state: touch
+
+    -   name: Write content to a file copy: content: “This file is
+        created using Ansible automation” dest:
+        /home/YOUR_LINUX_USERNAME/ansible_message.txt
+
+Save nano: Ctrl+O, Enter, Ctrl+X.
+
+8.  Run playbook: ansible-playbook basic_playbook.yml
+
+9.  Verify files: ls /home/YOUR_LINUX_USERNAME/ cat
+    /home/YOUR_LINUX_USERNAME/ansible_message.txt
+
+Expected content: This file is created using Ansible automation
+
+RESULT: WSL and Ansible were installed; a YAML playbook created files
+and wrote content automatically.
+
+CONCLUSION: Ansible uses YAML playbooks for configuration management and
+repetitive task automation.
+
+SCREENSHOTS: WSL; Ubuntu; apt update; Ansible installation; ansible
+version; playbook code; playbook run; created files and cat output.
+
+============================================================ PRACTICAL
+6: KUBERNETES BASICS
+============================================================ AIM: To set
+up a local Kubernetes cluster using Minikube, deploy a containerized
+application using kubectl, expose it as a service and access it through
+a browser.
+
+REQUIREMENTS: Windows, WSL, Docker Desktop, kubectl, Minikube, browser.
+
+1.  Verify WSL: wsl –version If needed, install from Administrator
+    PowerShell: wsl –install
+
+2.  Install and start Docker Desktop. Ensure Docker Engine is running.
+    Verify: docker –version
+
+3.  Install kubectl using:
+    https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+    Verify: kubectl version –client
+
+4.  Install Minikube: https://minikube.sigs.k8s.io/docs/start/ Verify:
+    minikube version
+
+5.  Start cluster using Docker driver: minikube start –driver=docker
+
+6.  Verify cluster: kubectl cluster-info kubectl get nodes Expected:
+    Minikube node should show Ready.
+
+7.  Create NGINX deployment: kubectl create deployment nginx
+    –image=nginx Expected: deployment.apps/nginx created
+
+8.  Check pods: kubectl get pods Wait until the NGINX pod shows Running
+    and READY 1/1.
+
+9.  Expose deployment: kubectl expose deployment nginx –type=NodePort
+    –port=80 Expected: service/nginx exposed
+
+10. Check service: kubectl get services
+
+11. Open application: minikube service nginx Open the URL displayed by
+    Minikube in a browser. Expected page: Welcome to nginx!
+
+12. Verify all resources: kubectl get all
+
+RESULT: A Minikube cluster was started; an NGINX deployment and pod were
+created; the deployment was exposed as a service and accessed in a
+browser.
+
+CONCLUSION: Kubernetes manages containerized workloads using
+deployments, pods and services. Minikube provides a local Kubernetes
+learning environment.
+
+SCREENSHOTS: WSL; Docker Desktop; kubectl version; Minikube version;
+cluster start; cluster-info; nodes; deployment; pods; service; NGINX
+browser page; kubectl get all.
+
+============================================================ GENERAL
+TROUBLESHOOTING
+============================================================
+
+GIT: origin already exists git remote -v git remote set-url origin
+https://github.com/USERNAME/REPOSITORY.git
+
+GIT: push rejected because remote contains changes Inspect the remote
+first. If local and remote histories are unrelated: git pull origin main
+–allow-unrelated-histories –no-rebase Resolve conflicts, commit the
+merge, then: git push -u origin main Do not force push as a first
+solution.
+
+GIT BASH: nano command not found Use: notepad filename Do not use nano
+unless it is installed.
+
+JENKINS: Python not recognized Check in PowerShell: python –version
+Jenkins runs as a Windows service and may not use the same PATH as your
+logged-in user. Ensure Python is available to the Jenkins service.
+
+JENKINS: Jenkinsfile not found Check that it is named exactly
+Jenkinsfile, not Jenkinsfile.txt, and is committed to the selected
+branch.
+
+DOCKER: daemon not running Open Docker Desktop and wait for Docker
+Engine to start.
+
+DOCKER: Dockerfile not found Run dir and verify the exact filename
+Dockerfile.
+
+ANSIBLE: YAML error Use spaces, not tabs. Check indentation, filename
+and Linux file paths.
+
+KUBERNETES: Minikube cannot start Ensure Docker Desktop is running:
+minikube status minikube start –driver=docker
+
+KUBERNETES: pod not running kubectl get pods kubectl describe pod
+POD_NAME Replace POD_NAME with the actual pod name.
+
+============================================================ END OF
+DEVOPS LAB PRACTICALS
+
+
+
+

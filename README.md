@@ -1631,6 +1631,180 @@ POD_NAME Replace POD_NAME with the actual pod name.
 ============================================================ END OF
 DEVOPS LAB PRACTICALS
 
+-----------------------------------------------------------------------------------------
 
+final - 3 
+
+Step 1 – Install WSL through CMD
+WSL (Windows Subsystem for Linux) allows Linux environments to run on Windows. Docker Desktop uses WSL 2 for its Linux containers.
+1. Click the Windows Start button.
+2. Search for CMD.
+3. Right-click Command Prompt.
+4. Select Run as administrator.
+Enter:
+wsl --install
+
+
+Wait for installation to complete.
+
+If Windows asks you to restart, restart your computer.
+
+
+
+
+
+
+
+
+kapilarya.com
+
+
+Screenshot 1: Capture the CMD window showing the WSL installation.
+Step 2 – Download and install Docker Desktop
+1. Open the official Docker website.
+2. Download Docker Desktop for Windows.
+3. Run the installer.
+4. Select the WSL 2 backend option if prompted.
+5. Complete installation.
+6. Restart your computer if required.
+7. Open Docker Desktop and wait until it shows that Docker is running.
+
+Download Docker Desktop
+
+
+
+
+
+
+
+
+community.element14.com
+
+
+Screenshot 2: Capture Docker Desktop running successfully.
+Step 3 – Verify Docker installation
+Open Git Bash or CMD and execute:
+docker --version
+
+
+Then:
+docker info
+
+
+Expected: Docker version information and server details should appear. If docker info shows a server connection error, Docker Desktop may not be running yet.
+
+Screenshot 3: Capture the Docker version and successful server information.
+Step 4 – Run your first Docker container
+Execute:
+docker run hello-world
+
+
+Expected output includes:
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+
+This confirms Docker can download and run a container.
+
+Screenshot 4: Capture the Hello from Docker output.
+Step 5 – Clone a GitHub repository
+Open Git Bash.
+
+Navigate to Downloads:
+cd ~/Downloads
+
+
+Clone the repository:
+git clone YOUR_GITHUB_REPOSITORY_URL
+
+
+Replace the URL with the GitHub repository URL you are supposed to use.
+
+For example:
+git clone https://github.com/USERNAME/portfolio.git
+
+
+Enter the downloaded folder:
+cd portfolio
+
+
+Check the files:
+ls
+
+
+Screenshot 5: Capture the successful Git clone and the list of repository files.
+Step 6 – Create a Dockerfile
+Inside the cloned project folder, execute:
+notepad Dockerfile
+
+
+If Notepad asks whether to create a new file, click Yes.
+
+Paste this code:
+FROM nginx:alpine
+
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+
+Save the file as Dockerfile (without .txt) and close Notepad.
+
+This Dockerfile:
+- FROM: Uses the Nginx web server image.
+- COPY: Copies your website files into the container.
+- EXPOSE: Specifies port 80.
+- CMD: Starts the Nginx server.
+Screenshot 6: Capture the Dockerfile code in Notepad.
+Step 7 – Build the Docker image
+In Git Bash, make sure you are inside the project folder.
+
+Execute:
+docker build -t portfolio .
+
+
+Explanation:
+- docker build: Builds an image.
+- -t portfolio: Gives the image the name portfolio.
+- .: Uses the current folder as the build context.
+Wait until the build completes successfully.
+
+Screenshot 7: Capture the successful Docker image build.
+Step 8 – Verify the Docker image
+Execute:
+docker images
+
+
+Expected: You should see an image named portfolio.
+
+Example:
+REPOSITORY	TAG
+portfolio	latest
+nginx	alpine
+
+Screenshot 8: Capture the Docker images list.
+Step 9 – Run the Docker container
+Execute:
+docker run -d -p 8081:80 --name portfolio-container portfolio
+
+
+Explanation:
+- -d: Runs in the background.
+- -p 8081:80: Maps Windows port 8081 to container port 80.
+- --name: Assigns a name to the container.
+- portfolio: Uses the image we built.
+Verify:
+docker ps
+
+
+Expected: The portfolio-container should appear with status Up.
+
+Screenshot 9: Capture the running container.
+Step 10 – Open the Dockerized website
+Open Google Chrome.
+
+Enter:
 
 

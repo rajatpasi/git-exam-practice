@@ -1988,3 +1988,472 @@ Check that portfolio-container is running.
 Now open Chrome:
 Website URL
 http://localhost:8081/
+
+-------------------------------------------------------------------------------
+
+final 5 
+Practical 5 – Introduction to Ansible
+Practical identified from your college PDF
+Your Practical 5 is Introduction to Ansible, not Docker or Jenkins.
+
+I checked your DevOps practical journal. The aim is to install and configure Ansible on Windows using WSL (Windows Subsystem for Linux), then create and execute a YAML playbook to automate file creation. DevOps_Journal_Firdous_Roll24.pdf
+
+
+We will perform this on your home laptop, step by step, following your college journal.
+1. Understand what you are going to perform
+Aim: To install and configure Ansible using WSL and create basic automation playbooks.
+
+Software required:
+- Windows 10/11
+- WSL
+- Ubuntu
+- Ansible
+Practical workflow:
+Windows
+
+WSL – Ubuntu
+
+Install Ansible
+
+Create YAML Playbook
+
+Execute and verify automated files
+
+
+2. Step-by-step practical execution
+Step 1 – Install WSL
+1. Open Windows Start.
+2. Search for PowerShell.
+3. Right-click and select Run as Administrator.
+4. Execute:
+wsl --install
+
+
+5. Wait for installation to complete.
+6. Restart your laptop if Windows requests it.
+What is WSL?
+
+WSL allows us to run a Linux environment (Ubuntu) inside Windows without installing a separate operating system.
+Step 2 – Open Ubuntu
+After restarting:
+1. Open the Start menu.
+2. Search for Ubuntu.
+3. Open Ubuntu.
+4. It will ask you to create a Linux username and password.
+For example:
+Enter new UNIX username: rajat
+New password:
+Retype new password:
+
+
+Use your own username and password. The password will not appear while typing; this is normal.
+
+Important: Remember your Ubuntu username and password because you will need them for sudo commands.
+Step 3 – Update Ubuntu
+In the Ubuntu terminal, execute:
+sudo apt update
+
+
+Enter your Ubuntu password if requested.
+
+Meaning: Updates the Ubuntu package list so that the latest available software versions can be installed.
+
+Expected: The package lists are updated successfully.
+Step 4 – Install Ansible
+Execute:
+sudo apt install ansible -y
+
+
+Meaning:
+- sudo – runs the command with administrator privileges.
+- apt install – installs software.
+- ansible – software being installed.
+- -y – automatically confirms installation.
+Wait until the installation finishes.
+Step 5 – Verify Ansible installation
+Execute:
+ansible --version
+
+
+Expected output will display the installed Ansible version and configuration information.
+Installation verification
+Step 6 – Create Ansible project folder
+Execute these commands in Ubuntu:
+mkdir ~/ansible_lab
+cd ~/ansible_lab
+
+
+Meaning:
+- mkdir creates a folder.
+- cd enters the folder.
+- ~/ represents your Ubuntu home directory.
+Verify:
+pwd
+
+
+Expected: /home/yourusername/ansible_lab
+Step 7 – Create the Ansible Playbook
+Execute:
+nano basic_playbook.yml
+
+
+This opens the Nano text editor.
+
+Now type the following YAML code. Replace YOUR_USERNAME with your actual Ubuntu username.
+
+---
+- name: Basic Ansible Automation
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Create a text file
+      file:
+        path: /home/YOUR_USERNAME/ansible_file.txt
+        state: touch
+
+    - name: Write content to a file
+      copy:
+        content: "This file is created using Ansible automation"
+        dest: /home/YOUR_USERNAME/ansible_message.txt
+
+
+
+For example, if your Ubuntu username is rajat, replace both occurrences with rajat.
+
+Understand the code:
+Keyword	Meaning
+name	Name of the playbook
+hosts	Machine where tasks execute
+localhost	Current local machine
+connection	Uses local connection
+tasks	Activities to perform
+file	Creates a file
+state: touch	Creates an empty file
+copy	Writes content into a file
+content	Text to write
+dest	Destination path
+
+How to save in Nano:
+1. Press Ctrl + O.
+2. Press Enter.
+3. Press Ctrl + X.
+Remember: YAML indentation is important. Use spaces, not tabs.
+Step 8 – Execute the Ansible Playbook
+Run:
+ansible-playbook basic_playbook.yml
+
+
+Ansible will execute both tasks.
+
+Expected output will look similar to:
+PLAY [Basic Ansible Automation]
+
+TASK [Gathering Facts]
+ok: [localhost]
+
+TASK [Create a text file]
+changed: [localhost]
+
+TASK [Write content to a file]
+changed: [localhost]
+
+PLAY RECAP
+localhost : ok=3 changed=2 failed=0
+
+
+Expected: failed=0
+What happened?
+- Ansible created ansible_file.txt.
+- Ansible created ansible_message.txt.
+- It automatically wrote the specified content into the second file.
+Step 9 – Verify the created files
+Execute:
+ls /home/YOUR_USERNAME/
+
+
+You should see:
+ansible_file.txt
+ansible_message.txt
+
+
+Now check the contents:
+cat /home/YOUR_USERNAME/ansible_message.txt
+
+
+Expected output:
+This file is created using Ansible automation
+
+
+Practical completed
+3. Final practical result
+Result: WSL and Ansible were installed successfully. A YAML playbook was created and executed to automate file creation and write content into a text file.
+
+Conclusion: Ansible is an automation tool that uses YAML playbooks to automate repetitive tasks and manage system configurations. 
+-------------------------------------------------------------------------------------------
+
+Practical 6 – Kubernetes Basics
+Based on your college practical journal – Lab 6
+Your Practical 6 is Kubernetes Basics. We will perform it on your home laptop, following your college PDF (pages 42–48). DevOps_Journal_Firdous_Roll24.pdf
+
+1. Understand what you are going to perform
+Aim: To set up a local Kubernetes cluster using Minikube, deploy a containerized application using kubectl, expose it as a service, and access the application through a browser.
+
+Software required:
+- Windows 10/11
+- WSL
+- Docker Desktop
+- Kubernetes CLI (kubectl)
+- Minikube
+- Google Chrome or another browser
+Practical workflow:
+Windows + WSL
+
+Docker Desktop
+
+Minikube – Kubernetes Cluster
+
+kubectl – Create NGINX Deployment
+
+Expose Deployment as Service
+
+Access NGINX in Browser
+
+
+2. Step-by-step practical execution
+Step 1 – Install and verify WSL
+Open PowerShell as Administrator.
+
+Execute:
+wsl --version
+
+
+If WSL is not installed, execute:
+wsl --install
+
+
+Restart your laptop if required.
+
+Expected output: WSL version and kernel information.
+Step 2 – Install Docker Desktop
+1. Open the official website: Download Docker Desktop.
+2. Download Docker Desktop for Windows.
+3. Install it using the WSL 2 backend.
+4. Restart if required.
+5. Open Docker Desktop.
+6. Wait until Docker Engine is running.
+Verify using PowerShell:
+docker --version
+
+
+Then execute:
+docker info
+
+
+Expected: Docker version and server information should appear without connection errors.
+
+
+
+
+
+
+
+
+community.element14.com
+
+
+Step 3 – Install Kubernetes CLI (kubectl)
+Open the official Kubernetes installation page:
+Install kubectl on WindowsFollow the Windows installation instructions.
+
+After installation, open a new PowerShell window and execute:
+kubectl version --client
+
+
+Expected output:
+Client Version: v1.x.x
+
+
+The version number may differ.
+
+Meaning: kubectl is a command-line tool used to communicate with and manage Kubernetes clusters.
+Step 4 – Install Minikube
+Open the official website:
+
+Download Minikube.
+1. Select Windows as your operating system.
+2. Select the installer.
+3. Download the Minikube installer.
+4. Run the installer.
+5. Keep the default installation settings.
+6. Complete the installation.
+Verify:
+minikube version
+
+
+Expected: Minikube version information.
+
+
+
+
+
+
+
+
+medium.com
+
+
+Step 5 – Start the Kubernetes cluster
+First ensure Docker Desktop is running.
+
+Execute:
+minikube start --driver=docker
+
+
+Meaning:
+- minikube – local Kubernetes environment.
+- start – starts the cluster.
+- --driver=docker – uses Docker Desktop to run the cluster.
+Wait for the installation and startup process to finish.
+
+Expected output:
+Done! kubectl is now configured to use "minikube" cluster
+
+
+The first startup can take several minutes because Minikube downloads the required Kubernetes images.
+Step 6 – Verify the Kubernetes cluster
+Execute these commands one by one:
+kubectl cluster-info
+
+
+This displays information about the Kubernetes control plane.
+
+Next:
+kubectl get nodes
+
+
+Expected output:
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   ...   v1.x.x
+
+
+Cluster running
+The Ready status confirms that your Kubernetes node is operational.
+Step 7 – Create a Deployment
+Now we will deploy an NGINX application.
+
+Execute:
+kubectl create deployment nginx --image=nginx
+
+
+Expected output:
+deployment.apps/nginx created
+
+
+Meaning:
+- kubectl create deployment – creates a Kubernetes deployment.
+- nginx – deployment name.
+- --image=nginx – uses the NGINX container image.
+NGINX is a web server used to serve web pages.
+Step 8 – Check the Pods
+Execute:
+kubectl get pods
+
+
+Expected output:
+NAME                     READY   STATUS
+nginx-xxxxxxxxxx         1/1     Running
+
+
+Your actual pod name will be different.
+
+Understand these terms:
+Term	Meaning
+Pod	Smallest deployable unit in Kubernetes
+READY 1/1	One container is ready
+Running	Application container is running
+Restarts	Number of container restarts
+
+Wait until the pod status becomes Running and READY shows 1/1.
+Step 9 – Expose Deployment as a Service
+Execute:
+kubectl expose deployment nginx --type=NodePort --port=80
+
+
+Expected output:
+service/nginx exposed
+
+
+Meaning:
+- expose – makes the deployment accessible through a service.
+- --type=NodePort – exposes the service through a port on the node.
+- --port=80 – uses port 80 for NGINX.
+Step 10 – Access the Application in Browser
+Execute:
+minikube service nginx
+
+
+Minikube will display a URL and open the application in your browser.
+
+You should see:
+
+
+
+
+
+
+
+
+noob2poweruser.com
+
+
+Expected result
+Welcome to nginx!
+
+This confirms that the NGINX web server is accessible through the Kubernetes service.
+
+Important: Keep the terminal running while using the URL if Minikube opens a temporary tunnel using the Docker driver.
+Step 11 – Verify that the setup is complete
+Execute:
+kubectl get all
+
+
+This displays the Kubernetes resources, including:
+- Pods
+- Services
+- Deployments
+- ReplicaSets
+Expected: Your NGINX deployment should show one ready replica and its service should be listed.
+Step 12 – Scale the Application
+Now we will increase the number of NGINX application replicas from 1 to 3.
+
+Execute:
+kubectl scale deployment nginx --replicas=3
+
+
+Expected output:
+deployment.apps/nginx scaled
+
+
+Meaning:
+- scale – changes the number of application replicas.
+- deployment nginx – selects the NGINX deployment.
+- --replicas=3 – requests three application instances.
+Step 13 – Verify Scaling
+Execute:
+kubectl get pods
+
+
+Expected output:
+NAME                     READY   STATUS
+nginx-xxxxxxxxxx         1/1     Running
+nginx-yyyyyyyyyy         1/1     Running
+nginx-zzzzzzzzzz         1/1     Running
+
+
+You should see three NGINX pods with status Running and readiness 1/1.
+Practical completed
+3. Final practical result
+Result: Successfully installed and configured Minikube and kubectl, started a local Kubernetes cluster, created an NGINX deployment, exposed it as a NodePort service, accessed it through a web browser, and scaled the application to three replicas.
+
+Conclusion: Kubernetes is a container orchestration platform that manages containerized applications. Minikube provides a local Kubernetes environment, while kubectl is used to manage deployments, pods and services.
